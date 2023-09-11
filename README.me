@@ -3,3 +3,33 @@ dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
 
 ## Install
 This'll install Homebrew and chezmoi. After installation `chezmoi` will be initialized.
+
+# Use configuration from this repo
+chezmoi init politician --apply
+
+### Before formatting a mac
+
+Make sure all files are up to date with chezmoi
+
+```sh
+cd ~
+
+# Export list of brew/cask/mas installed packages
+brew bundle dump --force
+
+# Re-add linked files
+chezmoi re-add
+
+# Re-add VSCode settings as multi-arch template
+sed 's|'"$(brew --prefix)"'|{{ if eq .chezmoi.arch "arm64" }}/opt/homebrew{{ else }}/usr/local{{ end }}|' ~/Library/Application\ Support/Code/User/settings.json > $(chezmoi source-path)/private_Library/private_Application\ Support/private_Code/User/settings.json.tmpl
+```
+
+Review changes and commit
+
+```sh
+chezmoi git status
+
+chezmoi git add .
+chezmoi git commit
+chezmoi git push
+```
