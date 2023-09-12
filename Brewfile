@@ -48,11 +48,10 @@ cask "discord"
 cask "browserosaurus"
 cask "docker"
 cask "brave"
-cask "gimp"
-cask "gitify"
 cask "postman"
 cask "spotify"
 cask "visual-studio-code"
+cask "jetbrains-toolbox"
 mas "Amphetamine", id: 937984704
 mas "Bitwarden", id: 1352778147
 mas "Magnet", id: 441258766
