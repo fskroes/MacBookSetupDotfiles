@@ -65,11 +65,22 @@ osascript -e "tell application \"Terminal\" to set font name of settings set \"B
 osascript -e "tell application \"Terminal\" to set font size of settings set \"Basic\" to 18"
 
 # ---------------------------------------------------------------------------------------------------------------------
+# Terminal settings
+# ---------------------------------------------------------------------------------------------------------------------
+# General / New window with Pro profile:
+defaults write com.apple.Terminal "Startup Window Settings" -string Pro
+# Profile: default Pro profile:
+defaults write com.apple.Terminal "Default Window Settings" -string Pro
+
+# ---------------------------------------------------------------------------------------------------------------------
 # iTerm2 settings
 # ---------------------------------------------------------------------------------------------------------------------
 # 💡 echo nested values with "print"; use "set" to write values:
 #    /usr/libexec/PlistBuddy -c "print 'New Bookmarks':0:'Scrollback Lines'" ~/Library/Preferences/com.googlecode.iterm2.plist
 #    /usr/libexec/PlistBuddy -c "write 'New Bookmarks':0:'Scrollback Lines'" 10000 ~/Library/Preferences/com.googlecode.iterm2.plist
+
+# Profiles/Text: Enable Blinking Cursor
+/usr/libexec/PlistBuddy -c "set 'New Bookmarks':0:'Blinking Cursor' 1" ~/Library/Preferences/com.googlecode.iterm2.plist
 
 # Profile/Colors: Snazzy Theme
 defaults read com.googlecode.iterm2 | grep -q "Snazzy" ||
