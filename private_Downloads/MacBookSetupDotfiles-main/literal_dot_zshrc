@@ -1,0 +1,172 @@
+# ---------------------------------------------------------------------------------------------------------------------
+# Oh My Zsh!
+# ---------------------------------------------------------------------------------------------------------------------
+# Path to your oh-my-zsh installation
+export ZSH="$HOME/.oh-my-zsh"
+
+# Enable automatic updates
+zstyle ':omz:update' mode enable
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+# zsh options: http://zsh.sourceforge.net/Doc/Release/Options.html
+setopt APPEND_HISTORY # adds history
+setopt HIST_IGNORE_ALL_DUPS # If a new command line being added to the history list duplicates an older one, the older command is removed from the list
+setopt HIST_IGNORE_SPACE # No history when starting command with space
+setopt HIST_SAVE_NO_DUPS # When writing out the history file, older commands that duplicate newer ones are omitted
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Theme (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
+ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="alanpeabody"
+
+# Specify cache dir outside of the Oh My Zsh installation
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/ohmyzsh"
+
+# Enable command auto-correction
+# ENABLE_CORRECTION="true"
+
+# Display red dots whilst waiting for completion
+COMPLETION_WAITING_DOTS="true"
+
+# Disable marking untracked files under VCS as dirty (slow on big repos)
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Command execution time stamp shown in the history command output
+HIST_STAMPS="dd.mm.yyyy"
+
+# Plugins
+plugins=(
+  aliases     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aliases
+  aws         # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aws
+  direnv      # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/direnv
+  encode64    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/encode64
+  gitignore   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitignore
+  golang      # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/golang
+  gpg-agent   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gpg-agent
+  heroku      # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/heroku
+  istioctl    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/istioctl
+  kubectl     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectl
+  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectx
+  macos       # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
+  man         # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/man
+  npm         # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/npm
+  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pass
+  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/ssh-agent
+  terraform   # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/terraform
+  thefuck     # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/thefuck
+  vscode      # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vscode
+  yarn        # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/yarn
+  zsh-syntax-highlighting
+  nvm
+)
+
+# Init Oh My Zsh
+source $ZSH/oh-my-zsh.sh
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Aliases & functions
+# ---------------------------------------------------------------------------------------------------------------------
+alias cat="bat"
+alias gitdaemon="gitserve"
+alias gitserve="git daemon --base-path=. --export-all --reuseaddr --informative-errors --verbose"
+alias kind-reset="kreset"
+alias kreset="kind delete cluster && curl -fsSL https://raw.githubusercontent.com/tilt-dev/kind-local/master/kind-with-registry.sh | bash"
+alias ls="exa --header --git --group-directories-first --group --oneline"
+alias pr="gh pr create --fill; gh pr edit --add-label automerge; gh pr view --web"
+alias rebase="current=\$(git branch --show-current); git stash; git switch main; git pull; git switch $current; git rebase; git unstash"
+alias rm="trash"
+alias serve="http-server -o"
+alias uncommit="git reset --soft HEAD^"
+alias zshrc="chezmoi edit ~/.zshrc --apply"
+
+fpath=( ~/.zfuncs "${fpath[@]}" )
+freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
+autoload -Uz helm
+autoload -Uz kc
+autoload -Uz ks
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Bat
+# https://github.com/sharkdp/bat
+# ---------------------------------------------------------------------------------------------------------------------
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Chezmoi
+# ---------------------------------------------------------------------------------------------------------------------
+command -v chezmoi >/dev/null && . <(chezmoi completion zsh)
+
+# ---------------------------------------------------------------------------------------------------------------------
+# DirEnv
+# ---------------------------------------------------------------------------------------------------------------------
+export DIRENV_LOG_FORMAT=""
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Flux
+# ---------------------------------------------------------------------------------------------------------------------
+command -v flux >/dev/null && . <(flux completion zsh)
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Go
+# ---------------------------------------------------------------------------------------------------------------------
+export GOPATH=$HOME/go 
+export PATH=$PATH:$GOPATH/bin
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Homebrew
+# ---------------------------------------------------------------------------------------------------------------------
+export HOMEBREW_CASK_OPTS=--no-quarantine
+
+# ---------------------------------------------------------------------------------------------------------------------
+# GPG
+# ---------------------------------------------------------------------------------------------------------------------
+alias pinentry="pinentry-mac"
+export GPG_TTY=$(tty)
+
+# ---------------------------------------------------------------------------------------------------------------------
+# SSH
+# ---------------------------------------------------------------------------------------------------------------------
+# SSH with secretive
+# It is more user-friendly than using a GPG subkey because I don't need to have
+# my hardware key with me to SSH or sign commits.
+export SSH_AUTH_SOCK=$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+
+# SSH with SmartCard (Yubikey/Ledger)
+# export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+# gpgconf --launch gpg-agent
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Starship
+# ---------------------------------------------------------------------------------------------------------------------
+eval "$(starship init zsh)"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# TheFuck
+# ---------------------------------------------------------------------------------------------------------------------
+eval "$(thefuck --alias)"
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Nvm node.js package manager
+# ---------------------------------------------------------------------------------------------------------------------
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Other stuff (may be legacy)
+# ---------------------------------------------------------------------------------------------------------------------
+export CURRENT_AWS="echo \"\${AWS_PROFILE:-default}(\${AWS_DEFAULT_REGION:-\${AWS_REGION:-\$(cat ~/.aws/config | sed -n -E \"/\\\[((profile \$AWS_PROFILE)|\${AWS_PROFILE:-default})\\\]/,/\\[/p;/\\\[/d\" | grep region | cut -f2- -d=)}})\""
+
+
