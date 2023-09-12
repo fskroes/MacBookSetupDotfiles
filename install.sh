@@ -22,10 +22,10 @@ command -v chezmoi >/dev/null 2>&1 || \
 
 if [ -d "$HOME/.local/share/chezmoi/.git" ]; then
   echo "🚸  chezmoi already initialized"
-  echo "    Reinitialize with: 'chezmoi init https://github.com/chimurai/dotfiles.git'"
+  echo "    Reinitialize with: 'chezmoi init https://github.com/fskroes/MacBookSetupDotfiles.git'"
 else
   echo "🚀  Initialize dotfiles with:"
-  echo "    chezmoi init https://github.com/chimurai/dotfiles.git"
+  echo "    chezmoi init https://github.com/fskroes/MacBookSetupDotfiles.git"
 fi
 
 echo ""
